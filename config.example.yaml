@@ -1,0 +1,12 @@
+# Example configuration file for Auto Organizer
+
+watch_directory: "/path/to/Downloads"
+
+destination_directories:
+  images: "/path/to/Downloads/Images"
+  3dmodels: "/path/to/Downloads/3Dmodels"
+  videos: "/path/to/Downloads/Videos"
+  music: "/path/to/Downloads/Music"
+  sfx: "/path/to/Downloads/SFX"
+  documents: "/path/to/Downloads/Documents"
+  
