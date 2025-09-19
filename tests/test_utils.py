@@ -1,32 +1,39 @@
 import os
 import pytest
-from pathlib import Path
 from src.utils import make_unique, move_file
 
 
 def test_make_unique(tmp_path):
+    """Ensure make_unique generates a new name if file already exists."""
     dest = tmp_path
     file_path = dest / "file.txt"
     file_path.write_text("content")
 
     unique_name = make_unique(dest, "file.txt")
+
+    # Rename to file(1).txt or similar
     assert unique_name.startswith("file(")
     assert unique_name.endswith(").txt")
+    assert unique_name != "file.txt"
 
 
-def test_move_file(tmp_path):
-    # Create a destination folder
-    dest = tmp_path / "dest"
-    dest.mkdir()
+def test_move_file_creates_unique(tmp_path):
+    """Ensure move_file does not overwrite and moves with unique name."""
+    # Setup: create destination + conflicting file
+    dest = tmp_path
+    existing_file = dest / "file.txt"
+    existing_file.write_text("existing content")
 
-    # Create a dummy file to "move"
-    src_file = tmp_path / "test.txt"
-    src_file.write_text("hello")
+    # Create a new file to move
+    new_file = tmp_path / "new_file.txt"
+    new_file.write_text("new content")
 
-    # Call move_file
-    move_file(str(dest), str(src_file), "test.txt")
+    # Act: try moving into the same folder with conflicting name
+    move_file(dest, new_file, "file.txt")
 
-    # File should now exist in destination
-    moved_file = dest / "test.txt"
-    assert moved_file.exists()
-    assert moved_file.read_text() == "hello"
+    # Assert: both files exist (original + renamed one)
+    files = list(dest.iterdir())
+    names = [f.name for f in files]
+
+    assert "file.txt" in names
+    assert any(name.startswith("file(") and name.endswith(").txt") for name in names)

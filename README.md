@@ -49,6 +49,10 @@ Run unit tests with:
 pytest tests/
 ```
 
+make_unique → verifies that when a file already exists in the destination, the function generates a new unique name like file(1).txt.
+
+move_file → verifies that files are moved safely without overwriting existing ones.
+
 ## Github Actions CI
 
 Workflow (.github/workflows/python-app.yml) will automatically:
